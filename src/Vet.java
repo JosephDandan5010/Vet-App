@@ -5,10 +5,19 @@ public class Vet {
     static Scanner keyboardInput = new Scanner(System.in);
     static ArrayList<Animal> animals = new ArrayList<>();
     static ArrayList<Appointment> scheduledAppointments = new ArrayList<>();
+    static ArrayList<String> times = new ArrayList<>();
 
     public static void main(String[] args) {
+        // Add specific times to the times arraylist
+        times.add("11:00");
+        times.add("12:00");
+        times.add("1:00");
+        times.add("2:00");
+        times.add("3:00");
+        times.add("4:00");
         while (true) {
-            System.out.println("Would you like to add an appointment or quit? Add an appointment [app], continue [c]");
+            System.out.println("Would you like to add an appointment or continue? Add an appointment [app], " +
+                    "continue [c]");
             System.out.print("> ");
             String choice = keyboardInput.nextLine();
             if (choice.equalsIgnoreCase("app")) {
@@ -26,8 +35,9 @@ public class Vet {
                     [2] View all appointments
                     [3] Delete an appointment
                     [4] Update an appointment
-                    [5] Search an appointment
-                    [6] Quit""");
+                    [5] Check in
+                    [6] Search an appointment
+                    [7] Quit""");
             System.out.print("> ");
             String choice = keyboardInput.nextLine();
             if (choice.equals("1")) {
@@ -39,9 +49,11 @@ public class Vet {
             } else if (choice.equals("4")) {
                 updateAppointments();
             } else if (choice.equals("5")) {
-                searchAppointment();
+                checkIn();
             } else if (choice.equals("6")) {
-                System.out.println("Bye");
+                searchAppointment();
+            } else if (choice.equals("7")) {
+                System.out.println("Bye! Have a great day!");
                 break;
             } else {
                 System.out.println("That is not valid");
@@ -49,7 +61,37 @@ public class Vet {
         }
     }
 
+    // Adds an appointment
+    public static void addAppointment() {
+        System.out.print("Name: ");
+        String nameInput = keyboardInput.nextLine();
+        System.out.print("Animal Illness: ");
+        String illnessInput = keyboardInput.nextLine();
+        String timeChoice;
+        while (true) {
+            System.out.println("Please choose an available time. Available times: [11:00], [12:00], [1:00], " +
+                    "[2:00], [3:00], [4:00]");
+            System.out.print("> ");
+            timeChoice = keyboardInput.nextLine();
+            if (timesAvailable(timeChoice) > 1) {
+                System.out.println("That time slot is full please select another time slot.");
+            } else if (timeChoice.equalsIgnoreCase("11:00") || (timeChoice.equalsIgnoreCase("12:00") ||
+                    timeChoice.equalsIgnoreCase("1:00") || timeChoice.equalsIgnoreCase("2:00") ||
+                    timeChoice.equalsIgnoreCase("3:00") || timeChoice.equalsIgnoreCase("4:00"))) {
+                break;
+            } else {
+                System.out.println("Invalid time");
+            }
+        }
+        Appointment appointment = new Appointment(nameInput, null, illnessInput, timeChoice, addAnimal());
+        scheduledAppointments.add(appointment);
+    }
+
+    // Adds an animal
     public static Animal addAnimal() {
+        System.out.println("---------------");
+        System.out.println("Animal Details");
+        System.out.println("---------------");
         System.out.print("Owners name: ");
         String ownerNameInput = keyboardInput.nextLine();
         System.out.print("Animals name: ");
@@ -60,56 +102,60 @@ public class Vet {
         while (true) {
             System.out.print("Cat or Dog? ");
             typeOfAnimalInput = keyboardInput.nextLine();
-            if (typeOfAnimalInput.equalsIgnoreCase("cat") || (typeOfAnimalInput.equalsIgnoreCase("dog"))) {
+            if (typeOfAnimalInput.equalsIgnoreCase("cat") ||
+                    (typeOfAnimalInput.equalsIgnoreCase("dog"))) {
                 break;
             } else {
                 System.out.println("Please choose a valid animal");
             }
         }
-        System.out.print("Gender: ");
-        String genderInput = keyboardInput.nextLine();
+        String genderInput;
+        while (true) {
+            System.out.print("Gender: ");
+            genderInput = keyboardInput.nextLine();
+            if (genderInput.equalsIgnoreCase("M") ||
+                    genderInput.equalsIgnoreCase("F")) {
+                break;
+            } else {
+                System.out.println("Please choose a valid gender");
+            }
+        }
         System.out.print("(Please put only numbers in this field) Weight: ");
         double weightInput = Double.parseDouble(keyboardInput.nextLine());
-
-        Animal pet = new Animal(ownerNameInput, animalNameInput, breedInput, typeOfAnimalInput, genderInput, weightInput);
+        Animal pet = new Animal(ownerNameInput, animalNameInput, breedInput,
+                typeOfAnimalInput, genderInput, weightInput);
         animals.add(pet);
         return pet;
     }
 
-    public static void addAppointment() {
-        System.out.print("Name: ");
-        String nameInput = keyboardInput.nextLine();
-        System.out.print("Status: ");
-        String statusInput = keyboardInput.nextLine();
-        System.out.print("Illness: ");
-        String illnessInput = keyboardInput.nextLine();
-        System.out.println("Please choose an available time. Available times: [11:00], [1:00], [2:00], [3:00]");
-        System.out.print("> ");
-        String timeChoice = keyboardInput.nextLine();
-        while (true) {
-            if (timeChoice.equalsIgnoreCase("11:00") || (timeChoice.equalsIgnoreCase("1:00") ||
-                    timeChoice.equalsIgnoreCase("2:00") || timeChoice.equalsIgnoreCase("3:00"))) {
-                break;
-            } else {
-                System.out.println("Invalid time");
+    // Checks for available times
+    public static int timesAvailable(String newTime) {
+        int counter = 0;
+        for (Appointment a : scheduledAppointments) {
+            if (a.time.equals(newTime)) {
+                counter++;
             }
         }
-        Appointment appointment = new Appointment(nameInput, statusInput, illnessInput, timeChoice, addAnimal());
-        scheduledAppointments.add(appointment);
+        return counter;
     }
 
+    // Lists all animals in the system
     public static void listAllAnimals() {
         for (Animal a : animals) {
-            System.out.println(a.ownerName + a.petName + a.gender + a.breed + a.typeOfAnimal + a.weight);
+            System.out.println("Owners Name: " + a.ownerName + " | Pet Name: " + a.petName + " | Gender: "
+                    + a.gender + " | Breed: " + a.breed + " | Animal: " + a.typeOfAnimal + " | Weight: " + a.weight);
         }
     }
 
+    // Lists all the appointments in the system
     public static void listAllAppointments() {
         for (Appointment app : scheduledAppointments) {
-            System.out.println(app.name + app.status + app.illness + app.time + app.animal);
+            System.out.println("Name: " + app.name + " | Status: " + app.status + " | Animal Illness: " +
+                    app.illness + " | Time: " + app.time + " | Animal: " + app.animal.petName);
         }
     }
 
+    // Deletes an appointment from the system
     public static void deleteAppointments() {
         Appointment removeAppointment = null;
         boolean found = false;
@@ -121,22 +167,34 @@ public class Vet {
                 removeAppointment = app;
             }
         }
-        if (found) {
-            for (Animal a : animals) {
-                if (a == removeAppointment.animal) {
-                    animals.remove(a);
-                    break;
-                }
-            }
-            scheduledAppointments.remove(removeAppointment);
-
-        }
+        scheduledAppointments.remove(removeAppointment);
         if (!found) {
             System.out.println("Appointment not found");
         }
     }
 
+    // Updates an appointment in the system
     public static void updateAppointments() {
+        boolean found = false;
+        System.out.print("Name: ");
+        String nameInput = keyboardInput.nextLine();
+        for (Appointment app : scheduledAppointments) {
+            if (nameInput.equalsIgnoreCase(app.name)) {
+                System.out.print("Illness: ");
+                String illnessInput = keyboardInput.nextLine();
+                System.out.print("Time: ");
+                String timeInput = keyboardInput.nextLine();
+                app.update(illnessInput, timeInput);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Person not found");
+        }
+    }
+
+    // Changes the status of an appointment within the system
+    public static void checkIn() {
         boolean found = false;
         System.out.print("Name: ");
         String nameInput = keyboardInput.nextLine();
@@ -144,26 +202,24 @@ public class Vet {
             if (nameInput.equalsIgnoreCase(app.name)) {
                 System.out.print("Status: ");
                 String statusInput = keyboardInput.nextLine();
-                System.out.print("Illness: ");
-                String illnessInput = keyboardInput.nextLine();
-                System.out.print("Time: ");
-                String timeInput = keyboardInput.nextLine();
-                app.update(statusInput, illnessInput, timeInput);
+                app.updateStatus(statusInput);
                 found = true;
             }
         }
         if (!found) {
-            System.out.println("Contact not found");
+            System.out.println("Person not found");
         }
     }
 
+    // Searches for a specific appointment(s) with times
     public static void searchAppointment() {
-        System.out.print("Name: ");
+        System.out.print("Appointment times: ");
         String nameInput = keyboardInput.nextLine();
         boolean found = false;
         for (Appointment app : scheduledAppointments) {
-            if (nameInput.equalsIgnoreCase(app.name)) {
-                System.out.println();
+            if (nameInput.equalsIgnoreCase(app.time)) {
+                System.out.println("Name: " + app.name + " | Status: " + app.status + " | Animal Illness: " +
+                        app.illness + " | Time: " + app.time + " | Animal: " + app.animal.petName);
                 found = true;
             }
         }

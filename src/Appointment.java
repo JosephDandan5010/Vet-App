@@ -13,9 +13,12 @@ public class Appointment {
         this.animal = animal;
     }
 
-    public void update(String status, String illness, String time) {
-        this.status = status;
+    public void update(String illness, String time) {
         this.illness = illness;
         this.time = time;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
     }
 }
