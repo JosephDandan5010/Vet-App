@@ -22,6 +22,8 @@ public class Vet {
             String choice = keyboardInput.nextLine();
             if (choice.equalsIgnoreCase("app")) {
                 addAppointment();
+            } else if (choice.equals("c") && scheduledAppointments.size() == 0) {
+                System.out.println("No Appointments were provided.");
             } else if (!choice.equalsIgnoreCase("app") && !choice.equalsIgnoreCase("c")) {
                 System.out.println("That choice is not valid");
             } else if (choice.equalsIgnoreCase("c")) {
@@ -180,7 +182,7 @@ public class Vet {
         String nameInput = keyboardInput.nextLine();
         for (Appointment app : scheduledAppointments) {
             if (nameInput.equalsIgnoreCase(app.name)) {
-                System.out.print("Illness: ");
+                System.out.print("Animal Illness: ");
                 String illnessInput = keyboardInput.nextLine();
                 System.out.print("Time: ");
                 String timeInput = keyboardInput.nextLine();
