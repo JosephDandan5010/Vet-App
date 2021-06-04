@@ -58,7 +58,7 @@ public class Vet {
                 System.out.println("Bye! Have a great day!");
                 break;
             } else {
-                System.out.println("That is not valid");
+                System.out.println("That is not a valid choice.");
             }
         }
     }
@@ -82,7 +82,7 @@ public class Vet {
                     timeChoice.equalsIgnoreCase("3:00") || timeChoice.equalsIgnoreCase("4:00"))) {
                 break;
             } else {
-                System.out.println("Invalid time");
+                System.out.println("Invalid time!");
             }
         }
         Appointment appointment = new Appointment(nameInput, null, illnessInput, timeChoice, addAnimal());
@@ -108,7 +108,7 @@ public class Vet {
                     (typeOfAnimalInput.equalsIgnoreCase("dog"))) {
                 break;
             } else {
-                System.out.println("Please choose a valid animal");
+                System.out.println("Please choose a valid animal.");
             }
         }
         String genderInput;
@@ -119,7 +119,7 @@ public class Vet {
                     genderInput.equalsIgnoreCase("F")) {
                 break;
             } else {
-                System.out.println("Please choose a valid gender");
+                System.out.println("Please choose a valid gender.");
             }
         }
         System.out.print("(Please put only numbers in this field) Weight: ");
@@ -171,7 +171,7 @@ public class Vet {
         }
         scheduledAppointments.remove(removeAppointment);
         if (!found) {
-            System.out.println("Appointment not found");
+            System.out.println("Appointment not found!");
         }
     }
 
@@ -191,7 +191,7 @@ public class Vet {
             }
         }
         if (!found) {
-            System.out.println("Person not found");
+            System.out.println("Person not found!");
         }
     }
 
@@ -209,7 +209,7 @@ public class Vet {
             }
         }
         if (!found) {
-            System.out.println("Person not found");
+            System.out.println("Person not found!");
         }
     }
 
@@ -226,7 +226,7 @@ public class Vet {
             }
         }
         if (!found) {
-            System.out.println("Person not found");
+            System.out.println("No Appointments found with that time.");
         }
     }
 }
